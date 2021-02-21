@@ -178,3 +178,43 @@ start_times = [obj.boxes[0].time for obj in moving_objs]
 
 N_DIVISIONS = int(max_orig_len/(INT_BW_DIV))
 final_video  = [bg.copy() for _ in range(max_duration+int(N_DIVISIONS*GAP_BW_DIV)+10)]
+
+# In[106]:
+
+"""Crop obj"""
+cap  = cv2.VideoCapture(ROOT_VID)
+all_texts = []
+fcount = -1
+vid_timestamp = -1
+
+
+print("extracting moving objects from bg....")
+
+with progressbar.ProgressBar(max_value=total_frames) as bar:
+    
+    while ret:
+        
+        fcount += 1
+        bar.update(fcount)
+
+        vid_timestamp += 1
+        ret, frame = cap.read()
+        
+        if ret==True:
+            
+            for obj_idx, mving_obj in enumerate(moving_objs):
+                if mving_obj.boxes:
+                    first_box = mving_obj.boxes[0]
+                    
+                    if(first_box.time == vid_timestamp):
+                        FIN_time = first_box.time - start_times[obj_idx] + int(int(start_times[obj_idx]/int(INT_BW_DIV*fps))*GAP_BW_DIV*fps)
+                        
+                        overlay(final_video[FIN_time-1], frame, first_box.coords)
+                        (x, y, w, h) = first_box.coords
+        
+                        del(mving_obj.boxes[0])
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
+
+cap.release()
+cv2.destroyAllWindows()
