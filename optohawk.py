@@ -40,8 +40,21 @@ if args.INT_BW_DIV:
 
 fgbg = cv2.createBackgroundSubtractorKNN()
 
+ret, frame = cap.read()
+all_conts = []
+
+avg2 = np.float32(frame)
+
+print("Extracting Bg...")
+
 with progressbar.ProgressBar(max_value=total_frames) as bar:
-   
+    while ret:
+        fcount += 1
+        bar.update(fcount)
+        try:
+            cv2.accumulateWeighted(frame, avg2, 0.01)
+        except:
+            break
         #if
         ret, frame = cap.read()
         
@@ -49,14 +62,6 @@ with progressbar.ProgressBar(max_value=total_frames) as bar:
             fgmask = fgbg.apply(frame)
             (contours, hierarchy) = cv2.findContours(fgmask.copy(), cv2.RETR_EXTERNAL,cv2.CHAIN_APPROX_SIMPLE)
             
-            while ret:
-                fcount += 1
-                bar.update(fcount)
-                try:
-                    cv2.accumulateWeighted(frame, avg2, 0.01)
-                except:
-            break
-
             contours = np.array([np.array(cv2.boundingRect(c)) for c in contours if cv2.contourArea(c) >= 8000])
             all_conts.append(contours)
             for c in contours:
