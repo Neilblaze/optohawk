@@ -9,6 +9,7 @@ import os
 import cv2
 import argparse
 import progressbar
+import numpy as np
 
 parser = argparse.ArgumentParser()
 parser.add_argument("ROOT_VID", help="Path to the video to be summarized")
@@ -72,3 +73,20 @@ with progressbar.ProgressBar(max_value=total_frames) as bar:
 cap.release()
 cv2.destroyAllWindows()
 bg = cv2.convertScaleAbles(avg2)
+
+# ## Obj tracking
+
+# In[4]:
+
+def get_centre(p1):
+    return np.transpose(np.array([p1[:,0] + p1[:,2]/2, p1[:,1] + p1[:,3]/2]))
+
+def distance(p1, p2):
+    p1 = np.expand_dims(p1, 0)
+        
+    c1 = get_centre(p1)
+    c2 = get_centre(p2)
+        def get_nearest(p1, points):
+        """returns index to p1"""
+        return np.argmin(distance(p1, points))
+return np.linalg.norm(c1 - c2, axis=1)
