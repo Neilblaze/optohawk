@@ -181,12 +181,13 @@ final_video  = [bg.copy() for _ in range(max_duration+int(N_DIVISIONS*GAP_BW_DIV
 
 # In[106]:
 
+
 """Crop obj"""
 cap  = cv2.VideoCapture(ROOT_VID)
+ret, frame = cap.read()
 all_texts = []
-fcount = -1
 vid_timestamp = -1
-
+fcount = -1
 
 print("extracting moving objects from bg....")
 
@@ -211,6 +212,7 @@ with progressbar.ProgressBar(max_value=total_frames) as bar:
                         
                         overlay(final_video[FIN_time-1], frame, first_box.coords)
                         (x, y, w, h) = first_box.coords
+                        all_texts.append((FIN_time-1, frame2HMS(first_box.time, fps), (x+int(w/2), y+int(h/2))))
         
                         del(mving_obj.boxes[0])
             if cv2.waitKey(1) & 0xFF == ord("q"):
