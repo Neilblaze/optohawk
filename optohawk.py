@@ -115,14 +115,18 @@ class moving_obj:
 
 # In[100]:
 
+print("fragmenting bound in boxes...")
+
 moving_objs = []
 
 for curr_time, new_box in enumerate(all_conts):
     if len(new_box) != 0:
         new_assocs = [None]*len(new_box)
         obj_coord = np.array([obj.last_coord() for obj in moving_objs if obj.age(curr_time)<INTFR_THRESHOLD])
+        unexp_idx = -1
         for obj_idx, obj in enumerate(moving_objs):
             if obj.age(curr_time) < INTFR_THRESHOLD:
+                unexp_idx += 1
                 nearest_new = get_nearest(obj.last_coord(), new_box)
                 nearest_obj = get_nearest(new_box[nearest_new], obj_coord)
 
@@ -138,3 +142,4 @@ for curr_time, new_box in enumerate(all_conts):
             moving_objs[new_assoc].add_box(new_box)
         else: 
             new_moving_obj = moving_obj(new_box)
+            moving_objs.append(new_moving_obj)
