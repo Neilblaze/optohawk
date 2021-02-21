@@ -159,5 +159,20 @@ def cut(image, coord):
 
 def overlay(frame, image, coord):
     (x, y, w, h) = coord
-    frame[y:y+h,x:x+w] = cv2.addWeighted(frame[y:y+h,x:x+w],0.45,cut(image, coord),0.40,0)
+    frame[y:y+h,x:x+w] = cv2.addWeighted(frame[y:y+h,x:x+w],0.45,cut(image, coord),0.45,0)
 
+# In[104]:
+
+def sec2HMS(seconds):
+    return tm.strftime('%M:%S', tm.gmtime(seconds))
+
+def frame2HMS(n_frame, fps):
+    return sec2HMS(float(n_frame)/float(fps))
+
+# In[105]:
+
+max_orig_len = max(obj.boxes[1].time for obj in moving_objs)
+start_times = [obj.boxes[0].time for obj in moving_objs]
+N_DIVISIONS = int(max_orig_len/(INT_BW_DIV))
+max_duration = max((obj.boxes[1].time - obj.boxes[0].time) for obj in moving_objs)
+final_video  = [bg.copy() for _ in range(max_duration+int(N_DIVISIONS*GAP_BW_DIV)+100)]
