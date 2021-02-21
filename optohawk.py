@@ -220,3 +220,22 @@ with progressbar.ProgressBar(max_value=total_frames) as bar:
 
 cap.release()
 cv2.destroyAllWindows()
+
+# In[109]:
+
+filename = os.path.basename(ROOT_VID).split('.')[0]
+out = cv2.VideoWriter(filename+'_processed.avi',cv2.VideoWriter_fourcc(*'DIVX'), fps, (bg.shape[1],bg.shape[0]))
+
+for frame in final_video:
+    out.write(frame)
+    
+    if cv2.waitKey(1) & 0xFF == ord("q"):
+        break
+#TODO: fps
+out.release()
+cv2.destroyAllWindows()
+cap.release()
+
+print("Check root folder for processed video!')
+
+# In[ ]:
