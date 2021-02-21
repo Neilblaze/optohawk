@@ -9,6 +9,7 @@ import os
 import cv2
 import argparse
 import progressbar
+import time as tm
 import numpy as np
 
 parser = argparse.ArgumentParser()
@@ -90,3 +91,24 @@ def distance(p1, p2):
         """returns index to p1"""
         return np.argmin(distance(p1, points))
 return np.linalg.norm(c1 - c2, axis=1)
+
+# In[5]:
+
+class box:
+    def __init__(self, coord, time):
+        self.coord = coord
+        self.time  = time
+        
+class moving_obj:
+    def __init__(self, starting_box):
+        self.boxes = [starting_box]
+    
+    def add_box(self, box):
+        self.boxes.append(box)
+    
+    def last_coords(self):
+        return self.boxes[-1].coords
+    
+    def age(self, curr_time):
+        last_time = self.boxes[-1].time
+        return curr_time - last_time
