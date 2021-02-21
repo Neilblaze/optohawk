@@ -143,3 +143,9 @@ for curr_time, new_box in enumerate(all_conts):
         else: 
             new_moving_obj = moving_obj(new_box)
             moving_objs.append(new_moving_obj)
+
+# In[101]:
+
+MIN_FRMS = MIN_SECS*fps
+mov_objs = [obj for obj in mov_objs if (obj.box[-1].time-obj.box[0].time)>MIN_FRMS]
+
