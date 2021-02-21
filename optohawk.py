@@ -171,8 +171,10 @@ def frame2HMS(n_frame, fps):
 
 # In[105]:
 
-max_orig_len = max(obj.boxes[1].time for obj in moving_objs)
+max_orig_len = max(obj.boxes[-1].time for obj in moving_objs)
+max_duration = max((obj.boxes[-1].time - obj.boxes[0].time) for obj in moving_objs)
 start_times = [obj.boxes[0].time for obj in moving_objs]
+
+
 N_DIVISIONS = int(max_orig_len/(INT_BW_DIV))
-max_duration = max((obj.boxes[1].time - obj.boxes[0].time) for obj in moving_objs)
-final_video  = [bg.copy() for _ in range(max_duration+int(N_DIVISIONS*GAP_BW_DIV)+100)]
+final_video  = [bg.copy() for _ in range(max_duration+int(N_DIVISIONS*GAP_BW_DIV)+10)]
