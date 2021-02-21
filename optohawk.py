@@ -154,3 +154,4 @@ mov_objs = [obj for obj in mov_objs if (obj.box[-1].time-obj.box[0].time)>MIN_FR
 def cut(image, coord):
     (x, y, w, h) = coord
     return image[y:y+h,x:x+w]
+
