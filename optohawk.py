@@ -112,3 +112,29 @@ class moving_obj:
     def age(self, curr_time):
         last_time = self.boxes[-1].time
         return curr_time - last_time
+
+# In[100]:
+
+moving_objs = []
+
+for curr_time, new_box in enumerate(all_conts):
+    if len(new_box) != 0:
+        new_assocs = [None]*len(new_box)
+        obj_coord = np.array([obj.last_coord() for obj in moving_objs if obj.age(curr_time)<INTFR_THRESHOLD])
+        for obj_idx, obj in enumerate(moving_objs):
+            if obj.age(curr_time) < INTFR_THRESHOLD:
+                nearest_new = get_nearest(obj.last_coord(), new_box)
+                nearest_obj = get_nearest(new_box[nearest_new], obj_coord)
+
+                if nearest_obj==unexp_idx:
+                    new_assocs[nearest_new] = obj_idx
+    
+    
+    for new_idx, new_coord in enumerate(new_box):
+        new_assoc = new_assocs[new_idx]
+        new_box = box(new_coord, curr_time)
+
+        if new_assoc is not None: 
+            moving_objs[new_assoc].add_box(new_box)
+        else: 
+            new_moving_obj = moving_obj(new_box)
