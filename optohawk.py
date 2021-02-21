@@ -155,3 +155,9 @@ def cut(image, coord):
     (x, y, w, h) = coord
     return image[y:y+h,x:x+w]
 
+# In[103]:
+
+def overlay(frame, image, coord):
+    (x, y, w, h) = coord
+    frame[y:y+h,x:x+w] = cv2.addWeighted(frame[y:y+h,x:x+w],0.45,cut(image, coord),0.40,0)
+
